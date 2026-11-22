@@ -160,7 +160,17 @@ public final class GeminiClient {
     }
 
     private static List<String> fetchModelList(String apiKey) throws GeminiException {
-        Response r = send("GET", BASE + "models?pageSize=200", apiKey, null);
+        Response r;
+        try {
+            r = send("GET", BASE + "models?pageSize=200", apiKey, null);
+        } catch (java.net.UnknownHostException e) {
+            throw new GeminiException("İnternet bağlantısı yok ya da sunucuya ulaşılamadı.");
+        } catch (java.net.SocketTimeoutException e) {
+            throw new GeminiException("Model listesi zaman aşımına uğradı.", 0, true);
+        } catch (Exception e) {
+            throw new GeminiException("Model listesi alınamadı: "
+                    + (e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage()));
+        }
         if (r.code != 200) throw new GeminiException(httpMessage(r.code, r.raw), r.code, isRetryable(r.code));
         try {
             JSONArray arr = new JSONObject(r.raw).optJSONArray("models");
@@ -371,4 +381,4 @@ public final class GeminiClient {
         }
         return sb.toString();
     }
-}
+    }

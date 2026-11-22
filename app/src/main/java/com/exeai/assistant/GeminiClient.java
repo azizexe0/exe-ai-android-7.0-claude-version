@@ -147,7 +147,7 @@ public final class GeminiClient {
             }
         }
         if (System.currentTimeMillis() >= deadline || last == null) {
-            throw new GeminiException("Gemini " + (budgetMs / 1000) + " saniye içinde cevap vermedi. Lütfen tekrar dene efendim.", 0, false);
+            throw new GeminiException("Server " + (budgetMs / 1000) + " error=server83827492server_is_disconnect_please_try_again.", 0, false);
         }
         throw new GeminiException("Hiçbir Gemini modeli yanıt vermedi. Son hata: " + last.getMessage(),
                 last.status, last.retryable);
